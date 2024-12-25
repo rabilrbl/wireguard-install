@@ -284,10 +284,8 @@ function newClient() {
   done
 
 	if [[ ${ENDPOINT_TYPE} == "ipv4" ]]; then
-	  SERVER_PUB_IPv4=$(curl -4 https://ifconfig.co)
 	  ENDPOINT="${SERVER_PUB_IPv4}:${SERVER_PORT}"
   else
-    SERVER_PUB_IPv6=$(curl -6 https://ifconfig.co)
     ENDPOINT="[${SERVER_PUB_IPv6}]:${SERVER_PORT}"
   fi
 
