@@ -110,11 +110,7 @@ function installQuestions() {
 	echo ""
 
 	# Detect public IPv4 or IPv6 address and pre-fill for the user
-	SERVER_PUB_IP=$(ip -4 addr | sed -ne 's|^.* inet \([^/]*\)/.* scope global.*$|\1|p' | awk '{print $1}' | head -1)
-	if [[ -z ${SERVER_PUB_IP} ]]; then
-		# Detect public IPv6 address
-		SERVER_PUB_IP=$(ip -6 addr | sed -ne 's|^.* inet6 \([^/]*\)/.* scope global.*$|\1|p' | head -1)
-	fi
+	SERVER_PUB_IP=$(curl -s -4 https://api.ipify.org)
 	read -rp "IPv4 or IPv6 public address: " -e -i "${SERVER_PUB_IP}" SERVER_PUB_IP
 
 	# Detect public interface and pre-fill for the user
@@ -283,6 +279,7 @@ net.ipv6.conf.all.forwarding = 1" >/etc/sysctl.d/wg.conf
 
 function newClient() {
 	# If SERVER_PUB_IP is IPv6, add brackets if missing
+	SERVER_PUB_IP=$(curl -s -4 https://api.ipify.org)
 	if [[ ${SERVER_PUB_IP} =~ .*:.* ]]; then
 		if [[ ${SERVER_PUB_IP} != *"["* ]] || [[ ${SERVER_PUB_IP} != *"]"* ]]; then
 			SERVER_PUB_IP="[${SERVER_PUB_IP}]"
